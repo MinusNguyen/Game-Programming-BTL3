@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    public Rigidbody2D rigidbody;
+    public Rigidbody2D rigidBody;
     public float strength = 7f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,7 +21,12 @@ public class Player : MonoBehaviour
     {
         if (context.performed)
         {
-            rigidbody.linearVelocity = Vector2.up * strength;
+            rigidBody.linearVelocity = Vector2.up * strength;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameManager.instance.GameOver();
     }
 }
