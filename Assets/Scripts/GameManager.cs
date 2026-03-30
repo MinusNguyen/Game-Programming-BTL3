@@ -1,10 +1,15 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     [SerializeField] GameObject GameOverScreen;
+    [SerializeField] private GameObject globalVolume;
+    [SerializeField] private GameObject backgrounds;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -20,13 +25,20 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Physics2D.gravity = new Vector2(0, -9.81f);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void InvertGravity()
+    {
+        Physics2D.gravity = new Vector2(0, -Physics2D.gravity.y);
+        globalVolume.GetComponent<Volume>().weight = (globalVolume.GetComponent<Volume>().weight == 0) ? 1 : 0; ;
+        backgrounds.transform.localScale = new Vector3(1, -backgrounds.transform.localScale.y, 1);
     }
 
     public void GameOver()
