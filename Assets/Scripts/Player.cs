@@ -49,12 +49,14 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag(SCORE_TAG))
         {
             Debug.Log("Score!");
+            GameManager.instance.AddScore();
         }
         else if (collision.gameObject.CompareTag(INVERT_GRAVITY_TAG))
         {
             Debug.Log("Gravity Inverted!");
             GameManager.instance.InvertGravity();
             strength = -strength; // Invert the jump strength to match the new gravity direction
+            GameManager.instance.AddScore();
         }
         else
         {

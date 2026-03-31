@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject GameOverScreen;
     [SerializeField] private GameObject globalVolume;
     [SerializeField] private GameObject backgrounds;
+
+    const string HIGH_SCORE_KEY = "HighScore";
+    [SerializeField] int score;
+    [SerializeField] int highScore;
+    [SerializeField] TMP_Text ScoreDisplay;
 
     private void Awake()
     {
@@ -26,6 +32,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Physics2D.gravity = new Vector2(0, -9.81f);
+        highScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
     }
 
     // Update is called once per frame
@@ -44,6 +51,12 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Time.timeScale = 0f;
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt(HIGH_SCORE_KEY, highScore);
+        }
+        ScoreDisplay.text = $"Score: {score}\nHigh score: {highScore}";
         GameOverScreen.SetActive(true);
     }
 
@@ -52,5 +65,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameOverScreen.SetActive(false);
+        score = 0;
+    }
+
+    public void AddScore()
+    {
+        score++;
     }
 }
