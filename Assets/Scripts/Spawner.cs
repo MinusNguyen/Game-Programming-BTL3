@@ -11,12 +11,26 @@ public class Spawner : MonoBehaviour
     [SerializeField] float border = 4f;
 
 
-    [SerializeField] float diffRate = 0.2f;
-    [SerializeField] float diffInterval = 10f;
+    [SerializeField] float diffRate = 0.4f;
+    [SerializeField] float diffInterval = 8f;
 
     private int pipesSpawned = 0;
     private bool gravityInverted = false;
     private int gravityInvertThreshold;
+
+    public static Spawner instance;
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
+        else
+        {
+            instance = this;
+        }
+    }
 
     void Start()
     {
@@ -65,5 +79,11 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(interval);
             Pipes.speed += rate;
         }
+    }
+
+    public void SetDiff(float rate, float interval)
+    {
+        diffRate = rate;
+        diffInterval = interval;
     }
 }
