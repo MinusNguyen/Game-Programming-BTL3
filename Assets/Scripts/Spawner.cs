@@ -10,6 +10,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] float counter = 0;
     [SerializeField] float border = 4f;
 
+    //nhi - add moving pipes
+    [SerializeField] private GameObject Moving_pipe_prefab;
+    [SerializeField, Range(0f, 1f)] private float movingPipeChance = 0.3f;
+    //
 
     [SerializeField] float diffRate = 0.4f;
     [SerializeField] float diffInterval = 8f;
@@ -66,8 +70,16 @@ public class Spawner : MonoBehaviour
             Debug.Log("Spawned Gravity Pipe");
         }
         else
-        {
-            Instantiate(Pipe_prefab, new Vector3(transform.position.x, Random.Range(-border, border), 0), transform.rotation);
+        { // nhi - thêm điều kiện để spawn moving pipe
+            if (Random.value < movingPipeChance)
+            {
+                Instantiate(Moving_pipe_prefab, new Vector3(transform.position.x, Random.Range(-border, border), 0), transform.rotation);
+                Debug.Log("Spawned Moving Pipe");
+            }
+            else
+            {
+                Instantiate(Pipe_prefab, new Vector3(transform.position.x, Random.Range(-border, border), 0), transform.rotation);
+            }
         }
         pipesSpawned++;
     }
