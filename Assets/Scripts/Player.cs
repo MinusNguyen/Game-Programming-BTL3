@@ -31,9 +31,12 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
+    [SerializeField] float birdTilting = 30f;
     void Update()
     {
-        
+        float targetTilt = rigidBody.linearVelocity.y > 0 ? birdTilting: -birdTilting;
+        Quaternion targetQuaternion = Quaternion.Euler(0, 0, targetTilt);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetQuaternion, Time.deltaTime);
     }
 
     public void Jump(InputAction.CallbackContext context)

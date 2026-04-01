@@ -4891,8 +4891,8 @@ MonoBehaviour:
   intervals: 3
   counter: 0
   border: 4
-  Moving_pipe_prefab: {fileID: 2643268721846193487, guid: 89621a50fcba1a34e916ce16e457e40d, type: 3}
-  movingPipeChance: 0.3
+  Moving_pipe_prefab: {fileID: 2643268721846193487, guid: af87e7aed93cdbd428c00bdffab24b0e, type: 3}
+  movingPipeChance: 0.5
   diffRate: 0.4
   diffInterval: 8
 --- !u!4 &2030592601

@@ -148,7 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6246811454773337028}
   - component: {fileID: 7069283751658837404}
-  - component: {fileID: -6003313383354923858}
+  - component: {fileID: 4260352073440087598}
   m_Layer: 0
   m_Name: MovingPipes
   m_TagString: Untagged
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   leftBorder: -24
---- !u!114 &-6003313383354923858
+--- !u!114 &4260352073440087598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -196,11 +196,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2643268721846193487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d35bb77e7a936b84fa04ea6c7f95b75a, type: 3}
+  m_Script: {fileID: 11500000, guid: a9c6ae0cf3ae79a4f94fdc99e9815727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingObstacle
-  amplitude: 1
-  frequency: 1.5
+  amplitude: 1.2
+  frequency: 2
   randomPhase: 1
 --- !u!1 &4042537695864410945
 GameObject:
