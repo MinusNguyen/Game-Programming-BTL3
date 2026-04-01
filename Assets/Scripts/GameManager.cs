@@ -68,6 +68,11 @@ public class GameManager : MonoBehaviour
         score = 0;
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     public void AddScore()
     {
         score++;
