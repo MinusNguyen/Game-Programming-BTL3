@@ -7,14 +7,12 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    [SerializeField] GameObject GameOverScreen;
     [SerializeField] private GameObject globalVolume;
     [SerializeField] private GameObject backgrounds;
 
     const string HIGH_SCORE_KEY = "HighScore";
     [SerializeField] int score;
     [SerializeField] int highScore;
-    [SerializeField] TMP_Text ScoreDisplay;
 
     private void Awake()
     {
@@ -31,7 +29,10 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Time.timeScale = 1f;
         Physics2D.gravity = new Vector2(0, -9.81f);
+        score = 0;
+        UIManager.Instance.UpdateScore(score);
         highScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
     }
 
@@ -46,6 +47,12 @@ public class GameManager : MonoBehaviour
         Physics2D.gravity = new Vector2(0, -Physics2D.gravity.y);
         globalVolume.GetComponent<Volume>().weight = (globalVolume.GetComponent<Volume>().weight == 0) ? 1 : 0; ;
         backgrounds.transform.localScale = new Vector3(1, -backgrounds.transform.localScale.y, 1);
+        MusicManager.Instance.InvertMusic();
+        // apply SFX filters when gravity inverts
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.InvertSFX();
+        }
     }
 
     public void GameOver()
@@ -56,25 +63,23 @@ public class GameManager : MonoBehaviour
             highScore = score;
             PlayerPrefs.SetInt(HIGH_SCORE_KEY, highScore);
         }
-        ScoreDisplay.text = $"Score: {score}\nHigh score: {highScore}";
-        GameOverScreen.SetActive(true);
+        UIManager.Instance.DisplayGameOver();
+        MusicManager.Instance.PlayGameOverMusic();
+        SFXManager.Instance.ToggleSFX();
     }
 
     public void Retry()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        GameOverScreen.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        UIManager.Instance.HideAllUI();
         score = 0;
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
     }
 
     public void AddScore()
     {
         score++;
+        UIManager.Instance.UpdateScore(score);
+        SFXManager.Instance.PlayScoreSound();
     }
 }

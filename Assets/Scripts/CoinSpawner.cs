@@ -49,7 +49,6 @@ public class CoinSpawner : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            Coin.speed += rate;
         }
     }
 }

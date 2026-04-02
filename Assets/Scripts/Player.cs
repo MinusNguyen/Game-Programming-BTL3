@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private PlayerVisual playerVisual;
+
     public Rigidbody2D rigidBody;
     public float strength = 7f;
 
@@ -44,6 +46,8 @@ public class Player : MonoBehaviour
         if (context.performed)
         {
             rigidBody.linearVelocity = Vector2.up * strength;
+            playerVisual.Flap();
+            SFXManager.Instance.PlayFlapSound();
         }
     }
 

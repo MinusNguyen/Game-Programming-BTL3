@@ -187,6 +187,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   leftBorder: -24
+  lowerPipe: {fileID: 4042537695864410945}
+  gapVariation: 3
 --- !u!114 &4260352073440087598
 MonoBehaviour:
   m_ObjectHideFlags: 0

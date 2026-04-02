@@ -9,6 +9,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] float intervals = 3f;
     [SerializeField] float counter = 0;
     [SerializeField] float border = 4f;
+    [SerializeField] float minInterval = 0.8f;
+    [SerializeField] float maxPipeSpeed = 15f;
 
     //nhi - add moving pipes
     [SerializeField] private GameObject Moving_pipe_prefab;
@@ -18,29 +20,38 @@ public class Spawner : MonoBehaviour
     [SerializeField] float diffRate = 0.4f;
     [SerializeField] float diffInterval = 8f;
 
+    private Coroutine difficultyCoroutine;
+
     private int pipesSpawned = 0;
-    private bool gravityInverted = false;
+    private bool spawnGravityPipe = false;
     private int gravityInvertThreshold;
 
-    public static Spawner instance;
+    public static Spawner Instance;
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
         }
 
         else
         {
-            instance = this;
+            Instance = this;
         }
     }
 
     void Start()
     {
         Spawn();
-        StartCoroutine(DifficultyCoroutine(diffRate, diffInterval));
+        // load persisted difficulty if available
+        if (PlayerPrefs.HasKey("DifficultyRate") && PlayerPrefs.HasKey("DifficultyInterval"))
+        {
+            diffRate = PlayerPrefs.GetFloat("DifficultyRate");
+            diffInterval = PlayerPrefs.GetFloat("DifficultyInterval");
+        }
+        difficultyCoroutine = StartCoroutine(DifficultyCoroutine(diffRate, diffInterval));
         gravityInvertThreshold = Random.Range(3, 11);
+        Pipes.speed = 5f;
     }
 
     // Update is called once per frame
@@ -50,12 +61,11 @@ public class Spawner : MonoBehaviour
         if (counter > intervals)
         {
             Spawn();
-            counter = 0;
         }
 
         if (pipesSpawned >= gravityInvertThreshold)
         {
-            gravityInverted = !gravityInverted; // Toggle gravity state
+            spawnGravityPipe = true;
             gravityInvertThreshold = Random.Range(3, 11);
             pipesSpawned = 0;
         }
@@ -63,10 +73,11 @@ public class Spawner : MonoBehaviour
 
     void Spawn()
     {
-        if (gravityInverted)
+        if (spawnGravityPipe)
         {
             Instantiate(Gravity_pipe_prefab, new Vector3(transform.position.x, Random.Range(-border, border), 0), transform.rotation);
-            gravityInverted = false;
+            spawnGravityPipe = false;
+            SFXManager.Instance.PlayGravityPipeSound();
             Debug.Log("Spawned Gravity Pipe");
         }
         else
@@ -82,6 +93,7 @@ public class Spawner : MonoBehaviour
             }
         }
         pipesSpawned++;
+        counter = 0;
     }
 
     IEnumerator DifficultyCoroutine(float rate, float interval)
@@ -89,7 +101,8 @@ public class Spawner : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
-            Pipes.speed += rate;
+            Pipes.speed = (Pipes.speed >= maxPipeSpeed)? maxPipeSpeed : Pipes.speed + rate;
+            intervals = (intervals <= minInterval)? minInterval : intervals - rate;
         }
     }
 
@@ -97,5 +110,12 @@ public class Spawner : MonoBehaviour
     {
         diffRate = rate;
         diffInterval = interval;
+        // restart coroutine so the new rate/interval are used
+        if (difficultyCoroutine != null)
+        {
+            StopCoroutine(difficultyCoroutine);
+            difficultyCoroutine = null;
+        }
+        difficultyCoroutine = StartCoroutine(DifficultyCoroutine(diffRate, diffInterval));
     }
 }
